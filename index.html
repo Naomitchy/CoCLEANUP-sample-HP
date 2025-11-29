@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample | Official Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Zen+Old+Mincho:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Base Settings --- */
+        :root {
+            --text-color: #4a4a4a;
+            --accent-color: #8da399;
+            --bg-color: #f9f9f7;
+            --modal-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Zen Old Mincho', serif;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-color);
+            transition: color 0.3s;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* --- Animations (Core) --- */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-400 { transition-delay: 0.4s; }
+
+        /* ▼▼▼ 修正箇所：動きをより分かりやすく調整 ▼▼▼ */
+        @keyframes kenBurns {
+            0% {
+                transform: scale(1) translate(0, 0); /* 等倍・中心 */
+            }
+            100% {
+                transform: scale(1.15) translate(-2%, -1%); /* 1.15倍までズームしつつ、少し左上に移動 */
+            }
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            box-sizing: border-box;
+            background: rgba(249, 249, 247, 0.85);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 1px;
+            background-color: var(--text-color);
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('Profile.jpg');
+            background-size: cover;
+            background-position: center center;
+            z-index: -2;
+            /* ▼▼▼ 修正箇所：時間を短縮し動きを強調（15秒） ▼▼▼ */
+            animation: kenBurns 15s ease-in-out infinite alternate;
+            will-change: transform;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            z-index: -1;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        /* --- Philosophy Section --- */
+        .section {
+            padding: 100px 10%;
+        }
+
+        .split-layout {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .split-text {
+            flex: 1;
+        }
+
+        .split-image {
+            flex: 1;
+            position: relative;
+        }
+        
+        .split-image img {
+            box-shadow: 20px 20px 0px var(--accent-color);
+            transition: transform 0.5s ease;
+        }
+
+        .split-image:hover img {
+            transform: translate(-5px, -5px);
+            box-shadow: 25px 25px 0px var(--accent-color);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 40px;
+            display: inline-block;
+            border-bottom: 1px solid var(--text-color);
+        }
+
+        /* --- Services Section --- */
+        .services-bg {
+            background-image: url('hiro.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            color: #fff;
+            padding: 120px 10%;
+        }
+
+        .services-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .service-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .service-list {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            flex-wrap: wrap;
+        }
+
+        .service-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            padding: 40px;
+            width: 280px;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            transition: all 0.4s ease;
+            cursor: default;
+        }
+
+        .service-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .service-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        /* --- Buttons --- */
+        .cta-section {
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .btn-main {
+            display: inline-block;
+            padding: 15px 60px;
+            background-color: transparent;
+            color: var(--text-color);
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            border: 1px solid var(--text-color);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: color 0.4s, transform 0.2s;
+            z-index: 1;
+        }
+
+        .btn-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--text-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease-out;
+            z-index: -1;
+        }
+
+        .btn-main:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-main:hover::before {
+            transform: scaleX(1);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.8rem;
+            border-top: 1px solid #ddd;
+            background: var(--bg-color);
+        }
+
+        /* --- Modal --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(50, 50, 50, 0.6);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 50px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #aaa;
+            transition: color 0.2s;
+        }
+        .close-btn:hover { color: var(--text-color); }
+
+        .modal h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            font-family: 'Zen Old Mincho', serif;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        form input:focus, form textarea:focus {
+            border-bottom: 1px solid var(--accent-color);
+            background: rgba(141, 163, 153, 0.05);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .split-layout { flex-direction: column; }
+            .split-image { width: 100%; margin-top: 30px; }
+            nav ul { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Sample</div>
+        <nav>
+            <ul>
+                <li><a href="#philosophy">Philosophy</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#" id="contact-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="fade-in">Natural & Professional</h1>
+            <p class="fade-in delay-200">しなやかに、自分らしく働く。<br>あなたのビジョンを形にするパートナー。</p>
+        </div>
+    </section>
+
+    <section id="philosophy" class="section">
+        <div class="split-layout">
+            <div class="split-text">
+                <h2 class="section-title fade-in">Philosophy</h2>
+                <div class="fade-in delay-200">
+                    <p>
+                        無理をせず、流れに逆らわず、しかし確固たる芯を持って。<br><br>
+                        ビジネスにおいても、人生においても、<br>
+                        もっとも大切なのは「自然体」であることだと私は考えます。<br><br>
+                        寄せては返す波のように、<br>
+                        変化を恐れず、柔軟な思考で課題に向き合う。<br>
+                        そんなコンサルティングを提供しています。
+                    </p>
+                </div>
+            </div>
+            <div class="split-image fade-in delay-400">
+                <img src="sea.jpg" alt="Beautiful sea waves">
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services-bg">
+        <div class="services-overlay"></div>
+        <div class="service-content">
+            <h2 class="section-title fade-in" style="border-color: #fff;">Services</h2>
+            <p class="fade-in delay-200">これからの未来を見据えた、持続可能な成長をサポートします。</p>
+            
+            <div class="service-list">
+                <div class="service-item fade-in delay-200">
+                    <h3>Business Consulting</h3>
+                    <p>現状の課題を丁寧にヒアリングし、あなたらしさを活かした事業戦略を共に描きます。</p>
+                </div>
+                <div class="service-item fade-in delay-400">
+                    <h3>Executive Coaching</h3>
+                    <p>対話を通じて思考を整理し、意思決定の質を高めるための伴走型サポート。</p>
+                </div>
+                <div class="service-item fade-in" style="transition-delay: 0.6s;">
+                    <h3>Career Design</h3>
+                    <p>ライフステージの変化に合わせた、しなやかなキャリア構築をお手伝いします。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <p class="fade-in">まずは、あなたのお話をお聞かせください。</p>
+        <br>
+        <div class="fade-in delay-200">
+            <button id="openModal" class="btn-main">Get in Touch</button>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2025 Sample. All Rights Reserved.
+    </footer>
+
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Contact</h2>
+            <form>
+                <input type="text" placeholder="お名前" required>
+                <input type="email" placeholder="メールアドレス" required>
+                <textarea rows="5" placeholder="お問い合わせ内容"></textarea>
+                <button type="button" class="btn-main btn-full">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('contactModal');
+        const btn = document.getElementById('openModal');
+        const navContact = document.getElementById('contact-link');
+        const span = document.getElementsByClassName("close-btn")[0];
+
+        function openModal(e) {
+            e.preventDefault();
+            modal.classList.add('active');
+        }
+
+        btn.addEventListener('click', openModal);
+        navContact.addEventListener('click', openModal);
+
+        span.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.classList.remove('active');
+            }
+        });
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px 0px -10% 0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+
+</body>
+</html>
