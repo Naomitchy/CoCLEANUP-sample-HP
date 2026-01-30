@@ -155,6 +155,15 @@
             }
         }
 
+        /* 新規追加：スライドショー用フェードアニメーション */
+        @keyframes slideFade {
+            0% { opacity: 0; }
+            4% { opacity: 1; }
+            33.33% { opacity: 1; }
+            37.33% { opacity: 0; }
+            100% { opacity: 0; }
+        }
+
         .hero-section {
             height: 100vh;
             display: flex;
@@ -165,19 +174,35 @@
             overflow: hidden;
         }
 
-        /* 背景画像レイヤー (index2.htmlより) */
+        /* 背景画像レイヤー (スライドショー用に修正) */
         .hero-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('Profile.jpg');
             background-size: cover;
             background-position: center center;
             z-index: -2; /* 最背面 */
-            animation: kenBurns 15s ease-in-out infinite alternate;
-            will-change: transform;
+            opacity: 0; /* 初期状態は非表示 */
+            will-change: transform, opacity;
+        }
+
+        /* 各スライドの設定 */
+        .slide-1 {
+            background-image: url('profile.jpg');
+            animation: kenBurns 15s ease-in-out infinite alternate, slideFade 24s infinite;
+            animation-delay: 0s;
+        }
+        .slide-2 {
+            background-image: url('hero2.jpg');
+            animation: kenBurns 15s ease-in-out infinite alternate, slideFade 24s infinite;
+            animation-delay: 8s; /* 24s / 3枚 = 8s */
+        }
+        .slide-3 {
+            background-image: url('hero3.jpg');
+            animation: kenBurns 15s ease-in-out infinite alternate, slideFade 24s infinite;
+            animation-delay: 16s; /* 8s * 2 */
         }
 
         /* オーバーレイレイヤー (index2.htmlより) */
@@ -496,7 +521,10 @@
     </div>
 
     <section class="hero-section">
-        <div class="hero-bg"></div>
+        <div class="hero-bg slide-1"></div>
+        <div class="hero-bg slide-2"></div>
+        <div class="hero-bg slide-3"></div>
+        
         <div class="hero-overlay"></div>
         <canvas id="rainCanvas"></canvas>
         <div class="hero-content">
